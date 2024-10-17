@@ -4,29 +4,30 @@ micronaut:
   security:
     enabled: true
     endpoints:
-      login:
-        enabled: true
-        path: '/authentication/login'
+#      login:
+#        enabled: true
+#        path: '/authentication/login'
       logout:
         enabled: true
-        path: '/authentication/logout'
+#        path: '/authentication/logout'
+        path: /logout
         get-allowed: true
       oauth:
         enabled: true
       session:
         enabled: true
       reject-not-found: false
-#    authentication: cookie
+#    authentication: idtoken
     oauth2:
       clients:
         keycloak:
           client-id: ${OAUTH_CLIENT_ID:sandbox}
-          client-secret: ${OAUTH_CLIENT_SECRET:EheMCg3f7UUTywzCW4j9a9cQf60NeOt9}
+          client-secret: ${OAUTH_CLIENT_SECRET:FR5Xz0TaymuAyPxGIqFRhf8HpBtwyOVi}
           openid.issuer: ${OIDC_ISSUER_DOMAIN:`http://localhost:9009`}/realms/${KEYCLOAK_REALM:master}
-    token:
-      name-key: "user_id"
-      jwt:
-        cookie:
-          enabled: true
-          cookie-name: Authorization
+#    token:
+#      name-key: "user_id"
+#      jwt:
+#        cookie:
+#          enabled: true
+#          cookie-name: Authorization
     reject-not-found: false
