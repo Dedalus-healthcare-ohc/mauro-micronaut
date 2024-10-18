@@ -48,7 +48,12 @@ dependencies {
     implementation("io.micronaut.security:micronaut-security-oauth2")
     implementation("io.micronaut.views:micronaut-views-fieldset")
     implementation("io.micronaut.views:micronaut-views-thymeleaf")
+    compileOnly("io.micronaut:micronaut-http-validation")
+    compileOnly("io.micronaut.security:micronaut-security-annotations")
+    compileOnly("io.micronaut.serde:micronaut-serde-processor")
 
+    aotPlugins platform("io.micronaut.platform:micronaut-platform:4.6.2")
+    aotPlugins("io.micronaut.security:micronaut-security-aot")
 
     //Email
     implementation("io.micronaut.email:micronaut-email-javamail")

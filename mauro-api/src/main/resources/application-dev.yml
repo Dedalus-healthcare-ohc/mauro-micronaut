@@ -2,6 +2,8 @@ micronaut:
   server:
     port: 8088
   security:
+    authentication-provider-strategy: any
+    authentication: idtoken
     enabled: true
     endpoints:
 #      login:
@@ -12,12 +14,13 @@ micronaut:
 #        path: '/authentication/logout'
         path: /logout
         get-allowed: true
+      cookie:
+        enabled: true
       oauth:
         enabled: true
       session:
         enabled: true
       reject-not-found: false
-#    authentication: idtoken
     oauth2:
       clients:
         keycloak:

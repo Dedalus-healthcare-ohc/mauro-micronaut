@@ -25,6 +25,7 @@ class UsernamePasswordAuthenticationProvider<B> implements HttpRequestAuthentica
 
     @Override
     AuthenticationResponse authenticate(@Nullable HttpRequest<B> requestContext, @NonNull AuthenticationRequest<String, String> authRequest) {
+        log.debug("authenticate")
         try {
             String emailAddress = authRequest.identity
             String password = authRequest.secret
