@@ -10,8 +10,9 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.config.RedirectConfiguration
-import io.micronaut.security.config.RedirectService
 import io.micronaut.security.errors.PriorToLoginPersistence
+import io.micronaut.session.Session
+import io.micronaut.session.SessionStore
 import io.micronaut.session.http.SessionForRequest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -28,9 +29,14 @@ class MauroSessionLoginHandler {
     @Inject
     CatalogueUserCacheableRepository catalogueUserCacheableRepository
 
+    @Inject
+    SessionStore sessionStore
+
+
     MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request,
                                         RedirectConfiguration redirectConfiguration,
                                         PriorToLoginPersistence priorToLoginPersistence) {
+
         saveAuthenticationInSession(authentication, request);
         return loginSuccessResponse(request, redirectConfiguration, priorToLoginPersistence);
         //  MutableHttpResponse defaultResponse = super.loginSuccess(authentication, request)
@@ -92,9 +98,10 @@ class MauroSessionLoginHandler {
 
     private void saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
         Session session = SessionForRequest.find(request).orElseGet(() ->
-                SessionForRequest.create(sessionStore, request));
-        session.put(SecurityFilter.AUTHENTICATION, authentication);
+                SessionForRequest.create(sessionStore, request))
+        session.put(io.micronaut.security.filters.SecurityFilter.AUTHENTICATION, authentication);
     }
+
 
 
 }
