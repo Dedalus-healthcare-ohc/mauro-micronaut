@@ -18,7 +18,7 @@ micronaut:
         mapping: /swagger-ui/**
   security:
     enabled: false
-#    authentication: session
+    authentication: session
     redirect:
       enabled: false
     endpoints:
@@ -27,7 +27,7 @@ micronaut:
         path: '/authentication/login'
       logout:
         enabled: true
-        path: '/authentication/logout'
+#        path: '/authentication/logout'
         get-allowed: true
     reject-not-found: false
   caches:
