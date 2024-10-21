@@ -92,7 +92,7 @@ class MauroSessionLoginHandler {
 
     private void saveAuthenticationInSession(Authentication authentication, HttpRequest<?> request) {
         Session session = SessionForRequest.find(request).orElseGet(() ->
-                SessionForRequest.create(git stsessionStore, request));
+                SessionForRequest.create(sessionStore, request));
         session.put(SecurityFilter.AUTHENTICATION, authentication);
     }
 
