@@ -44,6 +44,7 @@ class MauroKeycloakLoginHandler extends IdTokenLoginHandler {
         super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence)
        this.redirectConfiguration = redirectConfiguration
         this.priorToLoginPersistence = priorToLoginPersistence
+        log.debug(">>>>>>>>> maurologinhandler: c'tor")
     }
 
     @Override

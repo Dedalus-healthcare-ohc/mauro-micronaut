@@ -10,10 +10,10 @@ micronaut:
     endpoints:
       login:
         enabled: true
+        redirect.enabled: false
         path: '/authentication/login'
       logout:
         enabled: true
-
         path: /logout
         get-allowed: true
       cookie:
