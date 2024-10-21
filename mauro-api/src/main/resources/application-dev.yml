@@ -6,12 +6,12 @@ micronaut:
     authentication: idtoken
     enabled: true
     endpoints:
-#      login:
-#        enabled: true
-#        path: '/authentication/login'
+      login:
+        enabled: true
+        path: '/authentication/login'
       logout:
         enabled: true
-#        path: '/authentication/logout'
+
         path: /logout
         get-allowed: true
       cookie:

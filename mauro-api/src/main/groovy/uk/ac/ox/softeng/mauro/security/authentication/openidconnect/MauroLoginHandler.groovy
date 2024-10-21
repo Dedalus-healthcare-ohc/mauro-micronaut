@@ -2,7 +2,6 @@ package uk.ac.ox.softeng.mauro.security.authentication.openidconnect
 
 import groovy.transform.CompileStatic
 import io.micronaut.security.oauth2.endpoint.token.response.IdTokenLoginHandler
-import io.micronaut.security.session.SessionLoginHandler
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import uk.ac.ox.softeng.mauro.security.authentication.MauroSessionLoginHandler

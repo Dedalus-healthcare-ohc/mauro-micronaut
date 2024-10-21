@@ -1,15 +1,10 @@
 package uk.ac.ox.softeng.mauro.security.authentication
 
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import io.micronaut.context.annotation.Replaces
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.security.session.SessionLoginHandler
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import uk.ac.ox.softeng.mauro.persistence.cache.ItemCacheableRepository.CatalogueUserCacheableRepository
@@ -17,8 +12,6 @@ import uk.ac.ox.softeng.mauro.security.AccessControlService
 
 @Singleton
 @Slf4j
-@CompileStatic
-@Replaces(SessionLoginHandler)
 class MauroSessionLoginHandler {
 
     @Inject

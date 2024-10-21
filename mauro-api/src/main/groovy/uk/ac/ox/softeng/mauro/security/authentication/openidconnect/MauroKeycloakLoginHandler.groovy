@@ -6,6 +6,7 @@ import io.micronaut.context.annotation.Replaces
 import io.micronaut.core.annotation.Nullable
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
+import io.micronaut.http.cookie.Cookie
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.authentication.AuthenticationResponse
 import io.micronaut.security.config.RedirectConfiguration
@@ -40,15 +41,21 @@ class MauroKeycloakLoginHandler extends IdTokenLoginHandler {
      * @param redirectService Redirect service
      * @param priorToLoginPersistence The prior to login persistence strategy
      */
-    MauroKeycloakLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration, RedirectConfiguration redirectConfiguration, RedirectService redirectService, PriorToLoginPersistence<HttpRequest<?>,
-            @Nullable MutableHttpResponse<?>> priorToLoginPersistence) {
-        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence)
+    MauroKeycloakLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration, RedirectConfiguration redirectConfiguration, RedirectService redirectService
+            ) {
+        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, null)
     }
 
     @Override
     MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
+        log.debug(">>>>>>>>>>>>>. loginsuccess ")
         if (!request.path.contains('/oauth/')) {
             mauroSessionLoginHandler.loginSuccess(authentication, request)
+        }else {
+            List<Cookie> cookies = super.getCookies(authentication, request)
+            super.applyCookies(createSuccessResponse(request), cookies);
+            //super.loginSuccess(authentication, request)
+
         }
     }
 

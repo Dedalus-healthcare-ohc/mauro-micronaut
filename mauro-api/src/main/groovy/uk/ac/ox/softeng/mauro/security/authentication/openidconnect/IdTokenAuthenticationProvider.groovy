@@ -40,7 +40,7 @@ class IdTokenAuthenticationProvider<T> extends OpenIdPasswordAuthenticationProvi
 
     @Override
     Publisher<AuthenticationResponse> authenticate(T requestContext, AuthenticationRequest<?, ?> authenticationRequest) {
-        log.debug("authenticate ")
+        log.debug(">>>>>>>>>>>  authenticate ")
         super.authenticate(requestContext, authenticationRequest)
 
     }
