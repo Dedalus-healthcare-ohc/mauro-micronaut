@@ -5,6 +5,8 @@ micronaut:
     authentication-provider-strategy: any
     authentication: idtoken
     enabled: true
+    redirect:
+      enabled: true
     endpoints:
       login:
         enabled: true

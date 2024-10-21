@@ -22,26 +22,26 @@ class MauroSessionLoginHandler {
 
 
     MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
-//       MutableHttpResponse defaultResponse = super.loginSuccess(authentication, request)
-//        if (defaultResponse.status == HttpStatus.OK) {
-//            log.debug 'Successful login, returning Authentication'
-//            return HttpResponse.ok(catalogueUserCacheableRepository.readById((UUID) authentication.attributes.id))
-//        } else {
-//            defaultResponse
-//        }
-        null
+       MutableHttpResponse defaultResponse = super.loginSuccess(authentication, request)
+        if (defaultResponse.status == HttpStatus.OK) {
+            log.debug 'Successful login, returning Authentication'
+            return HttpResponse.ok(catalogueUserCacheableRepository.readById((UUID) authentication.attributes.id))
+        } else {
+            defaultResponse
+        }
+
     }
 
 
     MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
-//        MutableHttpResponse defaultResponse = super.loginFailed(authenticationFailed, request)
-//        if (defaultResponse.status == HttpStatus.OK) {
-//            log.debug 'Login failed'
-//            return HttpResponse.unauthorized()
-//        } else {
-//            defaultResponse
-//        }
-        null
+        MutableHttpResponse defaultResponse = super.loginFailed(authenticationFailed, request)
+        if (defaultResponse.status == HttpStatus.OK) {
+            log.debug 'Login failed'
+            return HttpResponse.unauthorized()
+        } else {
+            defaultResponse
+        }
+       
     }
 }
 

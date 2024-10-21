@@ -41,9 +41,10 @@ class MauroKeycloakLoginHandler extends IdTokenLoginHandler {
      * @param redirectService Redirect service
      * @param priorToLoginPersistence The prior to login persistence strategy
      */
-    MauroKeycloakLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration, RedirectConfiguration redirectConfiguration, RedirectService redirectService
-            ) {
-        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, null)
+    MauroKeycloakLoginHandler(AccessTokenCookieConfiguration accessTokenCookieConfiguration, RedirectConfiguration redirectConfiguration,
+                              RedirectService redirectService,
+    @Nullable PriorToLoginPersistence<HttpRequest<?>, MutableHttpResponse<?>> priorToLoginPersistence) {
+        super(accessTokenCookieConfiguration, redirectConfiguration, redirectService, priorToLoginPersistence)
     }
 
     @Override
