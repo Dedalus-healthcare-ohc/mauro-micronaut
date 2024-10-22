@@ -14,7 +14,7 @@ class LoginLogoutIntegrationSpec extends SecuredIntegrationSpec {
     @Inject
     EmbeddedApplication<?> application
 
-    void 'not logged in user can only access public endpoints'() {
+    void 'not logged in user can only access public endpoints one'() {
         when:
         Map response = GET('/folders')
 
@@ -55,14 +55,13 @@ class LoginLogoutIntegrationSpec extends SecuredIntegrationSpec {
 
     void 'logout'() {
         when:
-        GET('/authentication/logout')
+        GET('/logout')
 
-        then:
-        HttpClientResponseException exception = thrown()
+        then:HttpClientResponseException exception = thrown()
         exception.status == HttpStatus.OK
     }
 
-    void 'not logged in user can only access public endpoints'() {
+    void 'not logged in user can only access public endpoints two'() {
         when:
         Map response = GET('/folders')
 
@@ -103,14 +102,14 @@ class LoginLogoutIntegrationSpec extends SecuredIntegrationSpec {
 
     void 'logout'() {
         when:
-        GET('/authentication/logout')
+        GET('/logout')
 
         then:
         HttpClientResponseException exception = thrown()
         exception.status == HttpStatus.OK
     }
 
-    void 'not logged in user can only access public endpoints'() {
+    void 'not logged in user can only access public endpoints three'() {
         when:
         Map response = GET('/folders')
 
