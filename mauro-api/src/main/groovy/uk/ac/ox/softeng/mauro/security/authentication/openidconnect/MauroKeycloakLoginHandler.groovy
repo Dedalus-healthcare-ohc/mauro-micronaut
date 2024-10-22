@@ -25,12 +25,14 @@ import uk.ac.ox.softeng.mauro.security.authentication.MauroSessionLoginHandler
 @Replaces(IdTokenLoginHandler)
 class MauroKeycloakLoginHandler extends IdTokenLoginHandler {
 
+    public static final String OAUTH = '/oauth/'
 
     @Inject
     MauroSessionLoginHandler mauroSessionLoginHandler
 
     RedirectConfiguration redirectConfiguration
     PriorToLoginPersistence priorToLoginPersistence
+
     /**
      * @param accessTokenCookieConfiguration Access token cookie configuration
      * @param redirectConfiguration Redirect configuration
@@ -47,7 +49,7 @@ class MauroKeycloakLoginHandler extends IdTokenLoginHandler {
 
     @Override
     MutableHttpResponse<?> loginSuccess(Authentication authentication, HttpRequest<?> request) {
-        if (!request.path.contains('/oauth/')) {
+        if (!isOauthRequest(request)) {
             mauroSessionLoginHandler.loginSuccess(authentication, request)
         }else {
             List<Cookie> cookies = super.getCookies(authentication, request)
@@ -68,5 +70,8 @@ class MauroKeycloakLoginHandler extends IdTokenLoginHandler {
         }
     }
 
+    boolean isOauthRequest(HttpRequest<?> request){
+        request.path.contains(OAUTH)
+    }
 }
 

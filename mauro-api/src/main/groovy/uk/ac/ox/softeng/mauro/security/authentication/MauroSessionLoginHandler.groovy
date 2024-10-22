@@ -1,5 +1,6 @@
 package uk.ac.ox.softeng.mauro.security.authentication
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.core.annotation.Nullable
@@ -22,6 +23,7 @@ import uk.ac.ox.softeng.mauro.security.AccessControlService
 
 @Singleton
 @Slf4j
+@CompileStatic
 class MauroSessionLoginHandler {
 
     @Inject
@@ -77,8 +79,8 @@ class MauroSessionLoginHandler {
             MutableHttpResponse<?> response = HttpResponse.status(HttpStatus.SEE_OTHER);
             ThrowingSupplier<URI, URISyntaxException> uriSupplier =
                     loginSuccessUriSupplier(loginSuccess, request, response, priorToLoginPersistence)
-            response.getHeaders().location(uriSupplier).get();
-            return response;
+            response.header('location', uriSupplier.get() as CharSequence)
+            response
         } catch (URISyntaxException e) {
             return HttpResponse.serverError();
         }
