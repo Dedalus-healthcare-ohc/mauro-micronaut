@@ -99,7 +99,7 @@ abstract class SecuredIntegrationSpec extends CommonDataSpec {
 
     void logout() {
         try {
-            GET('/authentication/logout')
+            GET('/logout')
         } catch (HttpClientResponseException exception) {
             if (exception.status != HttpStatus.OK) {
                 throw exception
