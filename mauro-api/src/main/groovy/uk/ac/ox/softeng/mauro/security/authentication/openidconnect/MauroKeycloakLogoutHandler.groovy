@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.core.convert.value.MutableConvertibleValues
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.security.config.RedirectConfiguration
 import io.micronaut.security.config.RedirectService
@@ -32,17 +33,30 @@ class MauroKeycloakLogoutHandler extends TokenCookieClearerLogoutHandler {
     }
 
     MutableHttpResponse<?> logout(HttpRequest<?> request) {
-        removeAuthenticationFromSession(request)
-        super.logout(request)
+        if (isSessionLogout(request)) {
+            sessionLogout(request)
+        } else {
+            super.logout(request)
+        }
     }
 
-    private void removeAuthenticationFromSession(HttpRequest<?> request) {
+    private MutableHttpResponse<?> sessionLogout(HttpRequest<?> request) {
         MutableConvertibleValues<Object> attrs = request.getAttributes();
         Optional<Session> existing = attrs.get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class);
         if (existing.isPresent()) {
             Session session = existing.get();
+            log.debug("Removing Session  {} ", session.toString())
             session.remove(SecurityFilter.AUTHENTICATION);
         }
+        try {
+            HttpResponse.ok()
+        } catch (URISyntaxException e) {
+            return HttpResponse.serverError();
+        }
+    }
+
+    boolean isSessionLogout(HttpRequest<?> httpRequest) {
+        httpRequest.getAttributes().findAll { HttpSessionFilter.SESSION_ATTRIBUTE }
     }
 }
 

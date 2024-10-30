@@ -11,6 +11,16 @@
 - this brings up the keycloak login: 
 - http://localhost:9009/admin
 - login, create client "sandbox -see guide here (ignore "start keycloak" instructions) https://www.keycloak.org/getting-started/getting-started-docker
+- eg clientId: sandbox
+-    name:     sandbox
+-    Description: micronaut
+-    Valid Redirect uris: http://localhost:8088/oauth/callback/keycloak
+-    valid post logout: http://localhost:8088/logout
+- 
+-￼ON the Credentials tab at the top, copy the client-secret and update value in application-dev.yml and application-secured.yml, if running keycloakIntegrationSpec and pointing 
+against locally running keycloak (from docker compose)
+￼￼
+
 - use master realm
 - see file sandbox-realm.json for settings (overwrite client-secret value)
 

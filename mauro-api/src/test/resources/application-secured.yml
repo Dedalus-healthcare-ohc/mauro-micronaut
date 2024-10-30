@@ -26,6 +26,7 @@ micronaut:
       clients:
         keycloak:
           client-id: ${OAUTH_CLIENT_ID:sandbox}
-          client-secret: ${OAUTH_CLIENT_SECRET:FR5Xz0TaymuAyPxGIqFRhf8HpBtwyOVi}
+          #          replace client secret
+          client-secret: ${OAUTH_CLIENT_SECRET:hzZmVQ4UDDIwrORODOzJ3JBPxZX5jh7y}
           openid.issuer: ${OIDC_ISSUER_DOMAIN:`http://localhost:`${random.port}}/realms/${KEYCLOAK_REALM:master}
 

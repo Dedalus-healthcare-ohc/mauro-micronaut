@@ -9,15 +9,15 @@ services:
       KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
+      KEYCLOAK_IMPORT: /opt/keycloak/data/import/sandbox-realm.json
+
     command:
       - start-dev
     ports:
       - 9009:8080
 
-  #volumes:
-  #  postgres_data:
-  #    driver: local
+    volumes:
+      - type: bind
+        source: ${PWD}/mauro-api/src/test/resources/keycloak/sandbox-realm.json
+        target: /opt/keycloak/data/import/sandbox-realm.json
 
-#networks:
-#  postgres_network:
-#    driver: bridge
