@@ -1,5 +1,7 @@
 package uk.ac.ox.softeng.mauro.controller.model
 
+import uk.ac.ox.softeng.mauro.service.plugin.PluginService
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -18,6 +20,7 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.transaction.annotation.Transactional
 import jakarta.inject.Inject
 import reactor.core.publisher.Flux
+import uk.ac.ox.softeng.mauro.domain.classifier.Classifier
 import uk.ac.ox.softeng.mauro.domain.facet.ReferenceFile
 import uk.ac.ox.softeng.mauro.domain.folder.Folder
 import uk.ac.ox.softeng.mauro.domain.model.AdministeredItem
@@ -30,6 +33,7 @@ import uk.ac.ox.softeng.mauro.persistence.cache.AdministeredItemCacheableReposit
 import uk.ac.ox.softeng.mauro.persistence.cache.FacetCacheableRepository
 import uk.ac.ox.softeng.mauro.persistence.cache.ModelCacheableRepository
 import uk.ac.ox.softeng.mauro.persistence.cache.ModelCacheableRepository.FolderCacheableRepository
+import uk.ac.ox.softeng.mauro.persistence.classifier.ClassifierRepository
 import uk.ac.ox.softeng.mauro.persistence.model.AdministeredItemRepository
 import uk.ac.ox.softeng.mauro.persistence.model.ModelContentRepository
 import uk.ac.ox.softeng.mauro.plugin.MauroPlugin
@@ -54,8 +58,8 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
     List<String> getDisallowedProperties() {
         log.debug '***** ModelController::getDisallowedProperties *****'
         super.disallowedProperties +
-                ['finalised', 'dateFinalised', 'readableByEveryone', 'readableByAuthenticatedUsers', 'modelType', 'deleted', 'folder', 'authority', 'branchName',
-                 'modelVersion', 'modelVersionTag']
+        ['finalised', 'dateFinalised', 'readableByEveryone', 'readableByAuthenticatedUsers', 'modelType', 'deleted', 'folder', 'authority', 'branchName',
+         'modelVersion', 'modelVersionTag']
     }
 
     @Override
@@ -98,12 +102,12 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
 
     @Transactional
     M create(@NonNull UUID folderId, @Body @NonNull M model) {
-        super.create(folderId, model)
+        super.create(folderId, model) as M
     }
 
     @Transactional
     M update(UUID id, @Body @NonNull M model) {
-        super.update(id, model)
+        super.update(id, model) as M
     }
 
     @Transactional
@@ -129,8 +133,9 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
         modelRepository.update(original, existing)
     }
 
+    @Transactional
     HttpStatus delete(UUID id, @Body @Nullable M model) {
-        M modelToDelete = (M) modelContentRepository.readWithContentById(id)
+        M modelToDelete = (M) modelContentRepository.findWithContentById(id)
 
         accessControlService.checkRole(Role.CONTAINER_ADMIN, modelToDelete)
 
@@ -166,22 +171,32 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
     @Transactional
     M createNewBranchModelVersion(UUID id, @Body @Nullable CreateNewVersionData createNewVersionData) {
         if (!createNewVersionData) createNewVersionData = new CreateNewVersionData()
-        M existing = modelContentRepository.findWithContentById(id)
-        existing.setAssociations()
-        getReferenceFileFileContent(existing.getAllContents())
+        M existing = getExistingWithContent(id)
 
-        accessControlService.checkRole(Role.EDITOR, existing)
-        accessControlService.checkRole(Role.EDITOR, existing.folder)
+        M copy = createCopyModelWithAssociations(existing, createNewVersionData)
 
+        M savedCopy = modelContentRepository.saveWithContent(copy)
+        savedCopy
+    }
+
+    protected M createCopyModelWithAssociations(M existing, CreateNewVersionData createNewVersionData) {
         M copy = modelService.createNewBranchModelVersion(existing, createNewVersionData.branchName)
         copy.parent = existing.parent
         updateCreationProperties(copy)
         updateDerivedProperties(copy)
 
         getReferenceFileFileContent([copy] as Collection<AdministeredItem>)
+        copy
+    }
 
-        M savedCopy = modelContentRepository.saveWithContent(copy)
-        savedCopy
+    protected M getExistingWithContent(UUID id) {
+        M existing = modelContentRepository.findWithContentById(id)
+        existing.setAssociations()
+        getReferenceFileFileContent(existing.getAllContents())
+
+        accessControlService.checkRole(Role.EDITOR, existing)
+        accessControlService.checkRole(Role.EDITOR, existing.folder)
+        existing
     }
 
     protected ModelCacheableRepository<M> getModelRepository() {
@@ -210,7 +225,7 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
 
     StreamedFile exportModel(UUID modelId, String namespace, String name, @Nullable String version) {
         ModelExporterPlugin mauroPlugin = mauroPluginService.getPlugin(ModelExporterPlugin, namespace, name, version)
-        handlePluginNotFound(mauroPlugin, namespace, name)
+        PluginService.handlePluginNotFound(mauroPlugin, namespace, name)
 
         M existing = modelContentRepository.findWithContentById(modelId)
         existing.setAssociations()
@@ -222,7 +237,7 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
     ListResponse<M> importModel(@Body MultipartBody body, String namespace, String name, @Nullable String version) {
 
         ModelImporterPlugin mauroPlugin = mauroPluginService.getPlugin(ModelImporterPlugin, namespace, name, version)
-        handlePluginNotFound(mauroPlugin, namespace, name)
+        PluginService.handlePluginNotFound(mauroPlugin, namespace, name)
 
         ImportParameters importParameters = readFromMultipartFormBody(body, mauroPlugin.importParametersClass())
 
@@ -243,12 +258,6 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
         ListResponse.from(smallerResponse)
     }
 
-    protected void handlePluginNotFound(MauroPlugin mauroPlugin, String namespace, String name) {
-        if (!mauroPlugin) {
-            throw new HttpStatusException(HttpStatus.BAD_REQUEST, "Model import plugin with namespace: ${namespace}, name: ${name} not found")
-        }
-    }
-
 
     protected StreamedFile exportedModelData(ModelExporterPlugin mauroPlugin, M existing) {
         byte[] fileContents = mauroPlugin.exportModel(existing)
@@ -256,7 +265,7 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
         new StreamedFile(new ByteArrayInputStream(fileContents), MediaType.APPLICATION_JSON_TYPE).attach(filename)
     }
 
-    private void getReferenceFileFileContent(Collection<AdministeredItem> administeredItems) {
+    protected void getReferenceFileFileContent(Collection<AdministeredItem> administeredItems) {
         administeredItems.each {
             if (it.referenceFiles) {
                 it.referenceFiles.each { referenceFile ->
