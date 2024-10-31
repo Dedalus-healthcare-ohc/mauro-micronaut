@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0.4
+    image: quay.io/keycloak/keycloak:latest
     container_name: micronaut_keycloak
     restart: "no"
     environment:
@@ -10,7 +10,13 @@ services:
       KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
-#      KEYCLOAK_IMPORT: /opt/keycloak/data/import/sandbox.json
+      KC_CLIENT_ID: sandbox
+      KC_CLIENT_SECRET: 9A6wkEliijDTu47YVH7bhwnzQcu9Oqkw
+      KC_REDIRECT_URI: http://localhost:8088/oauth/callback/keycloak
+      KEYCLOAK_FRONT_END_URL: http://localhost:9009/auth
+
+
+    #      KEYCLOAK_IMPORT: /opt/keycloak/data/import/sandbox.json
 
     command:
       - start-dev
@@ -18,8 +24,8 @@ services:
     ports:
       - 9009:8080
 
-    volumes:
-      - type: bind
-        source: ${PWD}/mauro-api/src/test/resources/keycloak/sandbox.json
-        target: /opt/keycloak/data/import/sandbox.json
+#    volumes:
+#      - type: bind
+#        source: ${PWD}/mauro-api/src/test/resources/keycloak/sandbox.json
+#        target: /opt/keycloak/data/import/sandbox.json
 
