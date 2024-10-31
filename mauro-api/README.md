@@ -4,7 +4,9 @@
 - Issue using library testcontainers-keycloak  (https://github.com/dasniko/testcontainers-keycloak) with realmImportFile on startup
 - with Spock
 -  Hence authorization from Keycloak auth endpoint does not pass.
-- 
+
+  Unable to import realm with client settings defined, either via Keycloak console or in docker compose script.
+  key
 - Current test @Ignored by default does work in the following manner :
 - assumes there is local keycloak running on port 9009 with admin client: "admin" (or run docker-compose script as follows:)
 -  on command line: docker compose up -d (run image in detached mode)

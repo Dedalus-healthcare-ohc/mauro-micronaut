@@ -3,21 +3,23 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.4
     container_name: micronaut_keycloak
+    restart: "no"
     environment:
       KC_LOG_LEVEL: debug
       KC_METRICS_ENABLED: true
       KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/sandbox-realm.json
+#      KEYCLOAK_IMPORT: /opt/keycloak/data/import/sandbox.json
 
     command:
       - start-dev
+#      - --import-realm
     ports:
       - 9009:8080
 
     volumes:
       - type: bind
-        source: ${PWD}/mauro-api/src/test/resources/keycloak/sandbox-realm.json
-        target: /opt/keycloak/data/import/sandbox-realm.json
+        source: ${PWD}/mauro-api/src/test/resources/keycloak/sandbox.json
+        target: /opt/keycloak/data/import/sandbox.json
 

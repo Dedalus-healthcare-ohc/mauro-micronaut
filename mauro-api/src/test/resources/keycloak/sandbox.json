@@ -9,11 +9,13 @@
   "enabled": true,
   "alwaysDisplayInConsole": false,
   "clientAuthenticatorType": "client-secret",
-  "secret": "FR5Xz0TaymuAyPxGIqFRhf8HpBtwyOVi",
+  "secret": "n70WWgy5xtLiIqm4mMwKHBkr9UR4H096",
   "redirectUris": [
     "http://localhost:8088/oauth/callback/keycloak"
   ],
-
+  "webOrigins": [
+    "http://localhost:8088"
+  ],
   "notBefore": 0,
   "bearerOnly": false,
   "consentRequired": false,
@@ -26,15 +28,11 @@
   "protocol": "openid-connect",
   "attributes": {
     "oidc.ciba.grant.enabled": "false",
-    "client.secret.creation.time": "1729151142",
+    "client.secret.creation.time": "1730367165",
     "backchannel.logout.session.required": "true",
-    "post.logout.redirect.uris": " http://localhost:8088/logout",
+    "post.logout.redirect.uris": "http://localhost:8088/logout",
     "oauth2.device.authorization.grant.enabled": "false",
-    "backchannel.logout.revoke.offline.tokens": "false",
-    "login_theme": "",
-    "display.on.consent.screen": false,
-    "frontchannel.logout.url": "",
-    "backchannel.logout.url": ""
+    "backchannel.logout.revoke.offline.tokens": "false"
   },
   "authenticationFlowBindingOverrides": {},
   "fullScopeAllowed": true,
@@ -42,8 +40,8 @@
   "defaultClientScopes": [
     "web-origins",
     "acr",
-    "profile",
     "roles",
+    "profile",
     "email"
   ],
   "optionalClientScopes": [
@@ -56,6 +54,5 @@
     "view": true,
     "configure": true,
     "manage": true
-  },
-  "authorizationServicesEnabled": false
+  }
 }
