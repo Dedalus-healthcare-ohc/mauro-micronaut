@@ -23,7 +23,7 @@ import uk.ac.ox.softeng.mauro.security.authentication.MauroSessionLoginHandler
 @Slf4j
 @CompileStatic
 @Replaces(IdTokenLoginHandler)
-class MauroKeycloakLoginHandler extends IdTokenLoginHandler {
+class MauroKeycloakLoginHandler extends IdTokenLoginHandler  {
 
     public static final String OAUTH = '/oauth/'
 
@@ -60,7 +60,7 @@ class MauroKeycloakLoginHandler extends IdTokenLoginHandler {
     @Override
     MutableHttpResponse<?> loginFailed(AuthenticationResponse authenticationFailed, HttpRequest<?> request) {
         try {
-            if (loginFailure == null) {
+            if (loginFailure == null || loginFailure == '/') {
                 return HttpResponse.unauthorized();
             }
             URI location = new URI(loginFailure);

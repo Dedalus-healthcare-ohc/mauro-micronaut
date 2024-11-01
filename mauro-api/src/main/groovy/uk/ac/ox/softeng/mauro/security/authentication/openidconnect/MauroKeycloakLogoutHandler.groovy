@@ -33,9 +33,11 @@ class MauroKeycloakLogoutHandler extends TokenCookieClearerLogoutHandler {
     }
 
     MutableHttpResponse<?> logout(HttpRequest<?> request) {
-        if (isSessionLogout(request)) {
+        if (isSession(request)) {
+            log.debug("session logout")
             sessionLogout(request)
         } else {
+            log.debug("oauth logout")
             super.logout(request)
         }
     }
@@ -55,8 +57,9 @@ class MauroKeycloakLogoutHandler extends TokenCookieClearerLogoutHandler {
         }
     }
 
-    boolean isSessionLogout(HttpRequest<?> httpRequest) {
-        httpRequest.getAttributes().findAll { HttpSessionFilter.SESSION_ATTRIBUTE }
+    static boolean isSession(HttpRequest<?> httpRequest) {
+        return httpRequest.getAttributes().get(HttpSessionFilter.SESSION_ATTRIBUTE, Session.class).isPresent()
+
     }
 }
 
