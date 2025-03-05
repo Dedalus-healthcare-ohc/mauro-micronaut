@@ -26,7 +26,7 @@ import io.micronaut.security.rules.SecurityRule
 import jakarta.inject.Inject
 
 @Slf4j
-@Controller()
+@Controller('/api')
 @CompileStatic
 @Secured(SecurityRule.IS_ANONYMOUS)
 class PublishController {
