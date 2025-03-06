@@ -59,7 +59,7 @@ class PublishedModelIntegrationSpec extends SecuredIntegrationSpec {
         .toSorted()
 
         when:
-        PublishedModelResponse publishedModelResponse = (PublishedModelResponse) GET(PUBLISHED_MODELS_PATH, PublishedModelResponse)
+        PublishedModelResponse publishedModelResponse = (PublishedModelResponse) GET("/api/$PUBLISHED_MODELS_PATH", PublishedModelResponse)
 
         then:
         publishedModelResponse
@@ -86,7 +86,7 @@ class PublishedModelIntegrationSpec extends SecuredIntegrationSpec {
         Terminology finalisedNewerVersion = (Terminology) PUT("$TERMINOLOGIES_PATH/$newerVersion.id/finalise", ['version': '2.0.0'], Terminology)
 
         when:
-        PublishedModelResponse publishedModelResponse = (PublishedModelResponse) GET("$PUBLISHED_MODELS_PATH/$terminologyId/newerVersions", PublishedModelResponse)
+        PublishedModelResponse publishedModelResponse = (PublishedModelResponse) GET("/api$PUBLISHED_MODELS_PATH/$terminologyId/newerVersions", PublishedModelResponse)
 
         then:
         publishedModelResponse
@@ -101,7 +101,7 @@ class PublishedModelIntegrationSpec extends SecuredIntegrationSpec {
         when:
         loginUser()
 
-        PublishedModelResponse publishedModelResponse = (PublishedModelResponse) GET(PUBLISHED_MODELS_PATH, PublishedModelResponse)
+        PublishedModelResponse publishedModelResponse = (PublishedModelResponse) GET("/api$PUBLISHED_MODELS_PATH", PublishedModelResponse)
 
         then:
         publishedModelResponse
