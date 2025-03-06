@@ -20,7 +20,6 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthorizationException
@@ -28,7 +27,6 @@ import io.micronaut.security.rules.SecurityRule
 import jakarta.inject.Inject
 
 @Slf4j
-@Controller('/api')
 @CompileStatic
 @Secured(SecurityRule.IS_ANONYMOUS)
 class PublishController implements PublishApi {

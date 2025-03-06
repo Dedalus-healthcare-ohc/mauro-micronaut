@@ -104,7 +104,11 @@ class PublishedModelIntegrationSpec extends SecuredIntegrationSpec {
         when:
         loginUser()
 
+<<<<<<< HEAD
         PublishedModelResponse publishedModelResponse = publishApi.show()
+=======
+        PublishedModelResponse publishedModelResponse = (PublishedModelResponse) GET("/api$PUBLISHED_MODELS_PATH", PublishedModelResponse)
+>>>>>>> 762e3b6a (fix failing integration test for published models -added /api to path)
 
         then:
         publishedModelResponse
