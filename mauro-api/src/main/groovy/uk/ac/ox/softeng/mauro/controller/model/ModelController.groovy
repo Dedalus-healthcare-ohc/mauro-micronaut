@@ -279,11 +279,7 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
         }
     }
 
-    protected void handleNotFoundError(M model, UUID id) {
-        if (!model) {
-            throw new HttpStatusException(HttpStatus.NOT_FOUND, "Model not found, $id")
-        }
-    }
+
 
     static protected HttpResponse<byte[]> createExportResponse(ModelExporterPlugin mauroPlugin, Model model) {
         byte[] fileContents = mauroPlugin.exportModel(model)
@@ -293,4 +289,38 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
             .header(HttpHeaders.CONTENT_LENGTH, Long.toString(fileContents.length))
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${filename}")
     }
+
+    //todo: implement actual
+    List<Map> simpleModelVersionTree(UUID id) {
+        [
+            [
+                id: id,
+                branch: 'main',
+                displayName: 'main'
+            ]
+        ] as List<Map>
+    }
+
+    //stub endpoint todo: actual
+    List<Map> edits(UUID id, Integer max){
+        [
+            [
+                count: 0,
+                items: []
+            ]
+        ] as List<Map>
+    }
+
+    List<Map> permissions(UUID id){
+        [
+            [
+                "readableByEveryone" : false,
+                "readableByAuthenticated" : false,
+                "readableByGroups" : [],
+                "writeableByGroups" : [],
+                "writeableByUsers" : []
+            ]
+        ] as List<Map>
+    }
+
 }
