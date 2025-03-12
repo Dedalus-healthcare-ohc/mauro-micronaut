@@ -1,18 +1,19 @@
 package uk.ac.ox.softeng.mauro.profile.applied
 
-import uk.ac.ox.softeng.mauro.domain.facet.Metadata
+import com.fasterxml.jackson.annotation.JsonIgnore
 import uk.ac.ox.softeng.mauro.domain.model.AdministeredItem
-import uk.ac.ox.softeng.mauro.plugin.MauroPlugin
+import uk.ac.ox.softeng.mauro.plugin.MauroPluginDTO
 import uk.ac.ox.softeng.mauro.profile.Profile
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-
-class AppliedProfile implements Profile {
+class AppliedProfile extends MauroPluginDTO {
 
     @JsonIgnore
     private AdministeredItem administeredItem
 
+    @JsonIgnore
     private Profile sourceProfile
+
+    List<AppliedProfileSection> sections
 
     @Override
     String getMetadataNamespace() {
@@ -60,7 +61,7 @@ class AppliedProfile implements Profile {
 
     void validate() {
         String typeName = administeredItem.getDomainType()
-        if (!profileApplicableForDomains.contains(typeName)) {
+        if (!sourceProfile.isApplicableForDomain(typeName)) {
             errors.add(
                 "The profile '${displayName}' cannot be applied to an object of type '${administeredItem.class.simpleName}'.  Allowed types are $profileApplicableForDomains'".toString())
         }
