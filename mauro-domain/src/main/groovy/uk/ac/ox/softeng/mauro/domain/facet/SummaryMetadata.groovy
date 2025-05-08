@@ -37,6 +37,7 @@ class SummaryMetadata extends Facet implements DiffableItem<SummaryMetadata> {
     @Transient
     CollectionDiff fromItem() {
         new SummaryMetadataDiff(id, summaryMetadataType, label)
+      //  new SummaryMetadataDiff(id, summaryMetadataType, label, summaryMetadataReports)
     }
 
     @Override

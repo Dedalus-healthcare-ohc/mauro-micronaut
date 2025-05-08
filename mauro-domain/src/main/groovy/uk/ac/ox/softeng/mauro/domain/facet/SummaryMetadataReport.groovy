@@ -1,19 +1,30 @@
 package uk.ac.ox.softeng.mauro.domain.facet
 
-import uk.ac.ox.softeng.mauro.domain.model.InstantConverter
+import uk.ac.ox.softeng.mauro.domain.InstantConverter
+import uk.ac.ox.softeng.mauro.domain.diff.CollectionDiff
+import uk.ac.ox.softeng.mauro.domain.diff.DiffBuilder
+import uk.ac.ox.softeng.mauro.domain.diff.DiffableItem
+import uk.ac.ox.softeng.mauro.domain.diff.ObjectDiff
+import uk.ac.ox.softeng.mauro.domain.diff.SummaryMetadataReportDiff
+import uk.ac.ox.softeng.mauro.domain.InstantDeserializer
+import uk.ac.ox.softeng.mauro.domain.InstantSerializer
 import uk.ac.ox.softeng.mauro.domain.model.Item
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import groovy.transform.AutoClone
 import groovy.transform.CompileStatic
 import groovy.transform.MapConstructor
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.Transient
-import uk.ac.ox.softeng.mauro.domain.diff.*
+import jakarta.inject.Inject
 
 import java.time.Instant
+
 
 @CompileStatic
 @MappedEntity(value = 'summary_metadata_report', schema = 'core', alias = 'summary_metadata_report_')
@@ -26,7 +37,7 @@ class SummaryMetadataReport extends Item implements DiffableItem<SummaryMetadata
     @JsonAlias(['summary_metadata_id'])
     UUID summaryMetadataId
 
-    @JsonDeserialize(converter = InstantConverter)
+    @InstantConverter
     @JsonAlias(['report_date'])
     Instant reportDate
 
@@ -53,7 +64,7 @@ class SummaryMetadataReport extends Item implements DiffableItem<SummaryMetadata
                 .rightHandSide(other.id?.toString(), other)
 
         base.appendString(DiffBuilder.VALUE, this.reportValue, other.reportValue)
-        base.appendField(DiffBuilder.REPORT_DATE ,this.reportDate, other.reportDate)
+        base.appendTimeStamp(DiffBuilder.REPORT_DATE ,this.reportDate, other.reportDate)
         base
     }
 

@@ -1,12 +1,16 @@
 package uk.ac.ox.softeng.mauro.domain.facet.federation
 
-import uk.ac.ox.softeng.mauro.domain.model.InstantConverter
+import uk.ac.ox.softeng.mauro.domain.InstantConverter
+import uk.ac.ox.softeng.mauro.domain.InstantDeserializer
+import uk.ac.ox.softeng.mauro.domain.InstantSerializer
 import uk.ac.ox.softeng.mauro.domain.model.Item
 import uk.ac.ox.softeng.mauro.domain.security.SecurableResource
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import groovy.transform.AutoClone
 import groovy.transform.CompileStatic
 import groovy.transform.MapConstructor
@@ -71,10 +75,11 @@ class SubscribedCatalogue extends Item implements SecurableResource{
     String accessToken
     @Nullable
     @JsonAlias('access_token_expiry_time')
+    @InstantConverter
     Instant accessTokenExpiryTime
 
     @DateUpdated
-    @JsonDeserialize(converter = InstantConverter)
+    @InstantConverter
     @JsonAlias(['last_read'])
     Instant lastRead
 

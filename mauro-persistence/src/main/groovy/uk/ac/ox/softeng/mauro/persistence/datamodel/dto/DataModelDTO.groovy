@@ -1,5 +1,6 @@
 package uk.ac.ox.softeng.mauro.persistence.datamodel.dto
 
+import uk.ac.ox.softeng.mauro.domain.InstantConverter
 import uk.ac.ox.softeng.mauro.domain.facet.Rule
 
 import groovy.transform.CompileStatic
@@ -32,8 +33,13 @@ class DataModelDTO extends DataModel implements AdministeredItemDTO {
     @Nullable
     @TypeDef(type = DataType.JSON)
     @MappedProperty
+//    @ColumnTransformer(read = '''(select json_agg(summary_metadata) from (select *,
+//                                    (select json_agg(summary_metadata_report)
+//                                    from core.summary_metadata_report
+//                                    where summary_metadata_id = summary_metadata.id) summary_metadata_reports
+//                                    from core.summary_metadata) summary_metadata where multi_facet_aware_item_id = data_model_.id)''')
     @ColumnTransformer(read = '''(select json_agg(summary_metadata) from (select *,
-                                    (select json_agg(summary_metadata_report)
+                                    (select json_agg(jsonb_build_object('id', summary_metadata_report.id, 'version', summary_metadata_report.version, 'date_created', summary_metadata_report.date_created, 'last_updated', summary_metadata_report.last_updated, 'report_date', timezone('UTC', summary_metadata_report.report_date), 'created_by', summary_metadata_report.created_by, 'report_value', summary_metadata_report.report_value, 'summary_metadata_id', summary_metadata_report.summary_metadata_id))
                                     from core.summary_metadata_report
                                     where summary_metadata_id = summary_metadata.id) summary_metadata_reports
                                     from core.summary_metadata) summary_metadata where multi_facet_aware_item_id = data_model_.id)''')

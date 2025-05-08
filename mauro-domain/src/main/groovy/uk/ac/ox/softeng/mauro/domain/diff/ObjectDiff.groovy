@@ -68,12 +68,18 @@ class ObjectDiff<T extends DiffableItem> {
     }
 
     <K> ObjectDiff<T> appendField(final String fieldName, K lhs, K rhs) throws MauroInternalException {
+
         if (lhs != rhs) {
             append(new FieldDiff(fieldName, lhs, rhs))
         }
         this
     }
-
+    <K> ObjectDiff<T> appendTimeStamp(final String fieldName, K lhs, K rhs) throws MauroInternalException {
+        if (lhs != rhs) {
+            append(new FieldDiff(fieldName, lhs, rhs))
+        }
+        this
+    }
     def <K extends DiffableItem> ObjectDiff appendCollection(String name, Collection<DiffableItem> lhs, Collection<DiffableItem> rhs) {
         ArrayDiff diff = DiffBuilder.arrayDiff() as ArrayDiff
         diff.name = name
@@ -88,6 +94,7 @@ class ObjectDiff<T extends DiffableItem> {
 
         Collection<K> deleted = []
         Collection<ObjectDiff> modified = []
+        println("modified."+ modified.size())
         // Assume all rhs have been created new
         List<K> created = new ArrayList<>(rhs as Collection<? extends K>)
 
@@ -116,12 +123,12 @@ class ObjectDiff<T extends DiffableItem> {
             }
         }
 
+        println("modified 2:"+ modified.size())
         if (created || deleted || modified) {
             append(diff.createdObjects(created as Collection)
                     .deletedObjects(deleted as Collection)
                     .modifiedObjects(modified as Collection) as ArrayDiff)
         }
-
         this
     }
 

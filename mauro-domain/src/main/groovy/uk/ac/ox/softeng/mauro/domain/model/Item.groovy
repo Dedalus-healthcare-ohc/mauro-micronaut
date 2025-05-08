@@ -37,6 +37,7 @@ abstract class Item implements Serializable {
      * The date and time that this object was created, as an instant in UTC.
      */
     @DateCreated
+//    @uk.ac.ox.softeng.mauro.domain.InstantConverter
     @JsonDeserialize(converter = InstantConverter)
     @JsonAlias(['date_created'])
     Instant dateCreated
@@ -46,6 +47,7 @@ abstract class Item implements Serializable {
      */
     @DateUpdated
     @JsonDeserialize(converter = InstantConverter)
+//    @uk.ac.ox.softeng.mauro.domain.InstantConverter
     @JsonAlias(['last_updated'])
     Instant lastUpdated
 

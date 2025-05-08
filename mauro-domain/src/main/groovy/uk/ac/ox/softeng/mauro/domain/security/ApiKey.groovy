@@ -1,10 +1,9 @@
 package uk.ac.ox.softeng.mauro.domain.security
 
-import uk.ac.ox.softeng.mauro.domain.model.InstantConverter
+import uk.ac.ox.softeng.mauro.domain.InstantConverter
 import uk.ac.ox.softeng.mauro.domain.model.Item
 
 import com.fasterxml.jackson.annotation.JsonAlias
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import groovy.transform.AutoClone
 import groovy.transform.CompileStatic
 import groovy.transform.MapConstructor
@@ -28,7 +27,7 @@ class ApiKey extends Item {
     //TODO: Rename this to 'label'
     String name
 
-    @JsonDeserialize(converter = InstantConverter)
+    @InstantConverter
     Instant expiryDate
 
     Boolean refreshable = true

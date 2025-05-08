@@ -1,9 +1,14 @@
 package uk.ac.ox.softeng.mauro.test.domain.facet
 
-import spock.lang.Specification
+import uk.ac.ox.softeng.mauro.domain.diff.ArrayDiff
+import uk.ac.ox.softeng.mauro.domain.diff.ObjectDiff
 import uk.ac.ox.softeng.mauro.domain.facet.SummaryMetadata
-import uk.ac.ox.softeng.mauro.domain.facet.SummaryMetadataType
+import uk.ac.ox.softeng.mauro.domain.facet.SummaryMetadataReport
 import uk.ac.ox.softeng.mauro.test.domain.TestModelData
+
+import spock.lang.Specification
+
+import java.time.Instant
 
 class SummaryMetadataSpec extends Specification {
 
@@ -12,18 +17,10 @@ class SummaryMetadataSpec extends Specification {
         given:
         SummaryMetadata original = TestModelData.testSummaryMetadata
         original.summaryMetadataReports = [
-                new SummaryMetadata().tap {
+                new SummaryMetadataReport().tap {
                     id = UUID.randomUUID()
-                    label = 'test label'
-                    description = 'test description'
-                    summaryMetadataType = SummaryMetadataType.STRING
-                },
-                new SummaryMetadata().tap {
-                    id = UUID.randomUUID()
-                    label = 'test label'
-                    description = 'test description'
-                    summaryMetadataType = SummaryMetadataType.MAP
-                } ]
+                    reportDate = Instant.now()}
+               ]
 
         when:
         SummaryMetadata cloned = original.clone()
@@ -38,5 +35,28 @@ class SummaryMetadataSpec extends Specification {
         cloned.summaryMetadataType.is(original.summaryMetadataType)
     }
 
+    void 'diff with different report -should show differencec '() {
+        SummaryMetadata original = TestModelData.testSummaryMetadata
+        original.summaryMetadataReports = [
+            new SummaryMetadataReport().tap {
+                id = UUID.randomUUID()
+                reportDate = Instant.now().minusSeconds(360)}
+        ]
+        SummaryMetadata other = original.clone()
+        other.summaryMetadataReports.add( new SummaryMetadataReport().tap{
+            id = UUID.randomUUID()
+            reportDate = Instant.now()
+        })
 
+        when:
+        ObjectDiff objectDiff = original.diff(other)
+
+        then:
+        objectDiff
+        objectDiff.numberOfDiffs == 1
+        objectDiff.diffs[0].name == 'summaryMetadataReports'
+        objectDiff.diffs[0].created.size() == 1
+        objectDiff.diffs[0].deleted.isEmpty()
+        objectDiff.diffs[0].modified.isEmpty()
+    }
 }

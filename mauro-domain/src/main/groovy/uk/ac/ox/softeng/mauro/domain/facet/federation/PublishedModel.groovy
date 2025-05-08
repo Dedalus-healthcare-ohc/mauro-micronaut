@@ -1,6 +1,6 @@
 package uk.ac.ox.softeng.mauro.domain.facet.federation
 
-import uk.ac.ox.softeng.mauro.domain.model.InstantConverter
+import uk.ac.ox.softeng.mauro.domain.InstantConverter
 import uk.ac.ox.softeng.mauro.domain.model.version.ModelVersion
 
 import com.fasterxml.jackson.annotation.JsonAlias
@@ -31,15 +31,15 @@ class PublishedModel implements Comparable<PublishedModel> {
     String description
     String modelType
     @DateUpdated
-    @JsonDeserialize(converter = InstantConverter)
+    @InstantConverter
     @JsonAlias(['last_updated'])
     Instant lastUpdated
     @DateCreated
-    @JsonDeserialize(converter = InstantConverter)
+    @InstantConverter
     @JsonAlias(['date_created'])
     Instant dateCreated
 
-    @JsonDeserialize(converter = InstantConverter)
+    @InstantConverter
     @Nullable
     Instant datePublished
 
