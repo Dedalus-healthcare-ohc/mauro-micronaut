@@ -1,9 +1,9 @@
 package uk.ac.ox.softeng.mauro.controller.federation
 
-import groovy.util.logging.Slf4j
 import uk.ac.ox.softeng.mauro.ErrorHandler
 import uk.ac.ox.softeng.mauro.api.Paths
 import uk.ac.ox.softeng.mauro.api.federation.PublishApi
+import uk.ac.ox.softeng.mauro.audit.Audit
 import uk.ac.ox.softeng.mauro.domain.authority.Authority
 import uk.ac.ox.softeng.mauro.domain.facet.federation.PublishService
 import uk.ac.ox.softeng.mauro.domain.facet.federation.response.AuthorityResponse
@@ -17,9 +17,9 @@ import uk.ac.ox.softeng.mauro.security.AccessControlService
 import uk.ac.ox.softeng.mauro.service.core.AuthorityService
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.AuthorizationException
@@ -27,7 +27,6 @@ import io.micronaut.security.rules.SecurityRule
 import jakarta.inject.Inject
 
 @Slf4j
-@Controller
 @CompileStatic
 @Secured(SecurityRule.IS_ANONYMOUS)
 class PublishController implements PublishApi {
@@ -45,6 +44,7 @@ class PublishController implements PublishApi {
         this.authorityService = authorityService
     }
 
+    @Audit
     @Get(Paths.PUBLISHED_MODELS)
     PublishedModelResponse show() {
         accessControlService.checkAuthenticated()
@@ -64,6 +64,7 @@ class PublishController implements PublishApi {
     }
 
 
+    @Audit
     @Get(Paths.PUBLISHED_MODELS_NEWER_VERSIONS)
     PublishedModelResponse newerVersions(@NonNull UUID publishedModelId) {
         PublishedModelResponse publishedModelResponse

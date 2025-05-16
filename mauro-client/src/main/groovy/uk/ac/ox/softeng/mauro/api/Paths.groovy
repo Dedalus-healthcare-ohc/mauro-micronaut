@@ -85,6 +85,7 @@ interface Paths {
     String DATA_CLASS_ID = '/dataModels/{dataModelId}/dataClasses/{id}'
     String DATA_CLASS_CHILD_DATA_CLASS_LIST = '/dataModels/{dataModelId}/dataClasses/{parentDataClassId}/dataClasses'
     String DATA_CLASS_CHILD_DATA_CLASS_ID = '/dataModels/{dataModelId}/dataClasses/{parentDataClassId}/dataClasses/{id}'
+    String DATA_CLASS_EXTENDS = '/dataModels/{dataModelId}/dataClasses/{id}/extends/{otherModelId}/{otherClassId}'
 
     /*
     * DataElementApi
@@ -134,6 +135,12 @@ interface Paths {
     */
     String METADATA_LIST = '/{domainType}/{domainId}/metadata'
     String METADATA_ID = '/{domainType}/{domainId}/metadata/{id}'
+
+    /*
+    * EditApi
+    */
+    String EDIT_LIST = '/{domainType}/{domainId}/edits'
+    String EDIT_ID = '/{domainType}/{domainId}/edits/{id}'
 
     /*
     * RuleApi
@@ -319,8 +326,8 @@ interface Paths {
     /*
     * PublishApi
     */
-    String PUBLISHED_MODELS = '/published/models'
-    String PUBLISHED_MODELS_NEWER_VERSIONS  = '/published/models/{publishedModelId}/newerVersions'
+    String PUBLISHED_MODELS = '/api/published/models'
+    String PUBLISHED_MODELS_NEWER_VERSIONS  = '/api/published/models/{publishedModelId}/newerVersions'
 
     /*
     * PublishApi
