@@ -97,15 +97,10 @@ class PublishedModelIntegrationSpec extends SecuredIntegrationSpec {
     }
 
     void 'logged in as user -get published models - should return not found'() {
-
         when:
         loginUser()
 
-<<<<<<< HEAD
         PublishedModelResponse publishedModelResponse = publishApi.show()
-=======
-        PublishedModelResponse publishedModelResponse = (PublishedModelResponse) GET("/api$PUBLISHED_MODELS_PATH", PublishedModelResponse)
->>>>>>> 762e3b6a (fix failing integration test for published models -added /api to path)
 
         then:
         publishedModelResponse

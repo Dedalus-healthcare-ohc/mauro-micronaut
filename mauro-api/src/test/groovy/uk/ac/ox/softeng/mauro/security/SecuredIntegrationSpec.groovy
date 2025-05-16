@@ -1,19 +1,18 @@
 package uk.ac.ox.softeng.mauro.security
 
-import uk.ac.ox.softeng.mauro.api.SessionHandlerClientFilter
-import uk.ac.ox.softeng.mauro.api.security.LoginApi
 
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.security.authentication.UsernamePasswordCredentials
-import jakarta.inject.Inject
-import spock.lang.Shared
 import uk.ac.ox.softeng.mauro.domain.security.ApplicationRole
 import uk.ac.ox.softeng.mauro.domain.security.CatalogueUser
 import uk.ac.ox.softeng.mauro.domain.security.UserGroup
 import uk.ac.ox.softeng.mauro.persistence.cache.ItemCacheableRepository
 import uk.ac.ox.softeng.mauro.security.utils.SecureRandomStringGenerator
 import uk.ac.ox.softeng.mauro.testing.CommonDataSpec
+
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.security.authentication.UsernamePasswordCredentials
+import jakarta.inject.Inject
+import spock.lang.Shared
 
 abstract class SecuredIntegrationSpec extends CommonDataSpec {
 
