@@ -18,8 +18,8 @@ import org.maurodata.domain.model.AdministeredItem
 import org.maurodata.domain.model.Item
 
 @CompileStatic
-@AutoClone
-abstract class Facet extends Item implements Pathable, ItemReferencer {
+@AutoClone(excludes = ['multiFacetAwareItem'])
+abstract class Facet extends Item implements Pathable, ItemReferencer  {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonAlias(['multi_facet_aware_item_domain_type'])

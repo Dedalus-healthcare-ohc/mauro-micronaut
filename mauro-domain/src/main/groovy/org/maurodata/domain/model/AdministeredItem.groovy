@@ -508,7 +508,7 @@ abstract class AdministeredItem extends Item implements Pathable {
      * @see #metadata
      */
     Metadata metadata(String namespace, String key, String value) {
-        Metadata md = Metadata.build(
+        Metadata md = new Metadata(
             namespace: namespace,
             key: key,
             value: value,
