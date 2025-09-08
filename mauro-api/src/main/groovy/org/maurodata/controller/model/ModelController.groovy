@@ -59,6 +59,7 @@ import org.maurodata.domain.security.Role
 import org.maurodata.domain.security.UserGroup
 import org.maurodata.domain.terminology.CodeSet
 import org.maurodata.domain.terminology.Terminology
+import org.maurodata.persistence.ContentsService
 import org.maurodata.persistence.cache.AdministeredItemCacheableRepository
 import org.maurodata.persistence.cache.FacetCacheableRepository
 import org.maurodata.persistence.cache.ModelCacheableRepository
@@ -108,6 +109,9 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
     MauroPluginService mauroPluginService
 
     ModelContentRepository<M> modelContentRepository
+
+    @Inject
+    ContentsService contentsService
 
     ModelService<M> modelService
     @Inject
@@ -724,7 +728,10 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
     }
 
     protected M saveFolder(Folder folder) {
-        Folder savedImport = modelContentRepository.saveWithContent(folder as M) as Folder
+        //folder.setAssociations()
+        Folder savedImport = (Folder) contentsService.saveWithContent(folder)
+
+        //Folder savedImport = modelContentRepository.saveWithContent(folder as M) as Folder
         savedImport as M
     }
 
