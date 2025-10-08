@@ -188,7 +188,10 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
 
     @Transactional
     HttpResponse delete(UUID id, @Body @Nullable M model, @Nullable Boolean permanent) {
-        M modelToDelete = (M) modelContentRepository.findWithContentById(id)
+        //modelContentRepository.findWithContentById(id)
+
+        M modelToDelete = (M) contentsService.loadWithContent(id)
+
 
         if (modelToDelete == null) {
             throw new HttpStatusException(HttpStatus.NOT_FOUND, "Object not found for deletion")
@@ -199,10 +202,11 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
         if (model?.version) modelToDelete.version = model.version
 
         if (permanent) {
+            contentsService.deleteWithContent(modelToDelete)
 
-            if (!administeredItemContentRepository.deleteWithContent(modelToDelete)) {
-                throw new HttpStatusException(HttpStatus.NOT_FOUND, 'Not found for deletion')
-            }
+//            if (!administeredItemContentRepository.deleteWithContent(modelToDelete)) {
+//                throw new HttpStatusException(HttpStatus.NOT_FOUND, 'Not found for deletion')
+//            }
         } else {
             modelToDelete.deleted(true)
             administeredItemRepository.update(modelToDelete)
@@ -1783,6 +1787,11 @@ abstract class ModelController<M extends Model> extends AdministeredItemControll
         }
         if (administeredItem.referenceFiles) {
             administeredItem.referenceFiles.each {
+                updateMultiAwareData(administeredItem, it)
+            }
+        }
+        if (administeredItem.edits) {
+            administeredItem.edits.each {
                 updateMultiAwareData(administeredItem, it)
             }
         }
