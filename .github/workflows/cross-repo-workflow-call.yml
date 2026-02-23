@@ -1,0 +1,33 @@
+name: Configurable Cross-Repo Workflow Call
+
+on:
+  push:
+
+jobs:
+  branch-check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_call: ${{ steps.check.outputs.match }}
+    steps:
+      - name: Check if external workflow call is required for this branch
+        id: check
+        run: |
+          IFS=',' read -ra PATTERNS <<< "${{ vars.CALL_BRANCHES }}"
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          MATCH=false
+
+          for pattern in "${PATTERNS[@]}"; do
+            if [[ "$BRANCH" == $pattern ]]; then
+              MATCH=true
+            fi
+          done
+
+          echo "match=$MATCH" >> $GITHUB_OUTPUT
+
+  call-workflow:
+    needs: branch-check
+    if: needs.branch-check.outputs.should_call == 'true'
+    uses: ${{ vars.TARGET_WORKFLOW_REPO }}/${{ vars.TARGET_WORKFLOW_FILE }}@${{ vars.TARGET_WORKFLOW_REF }}
+    with:
+      source_branch: ${{ github.ref_name }}
+      source_sha: ${{ github.sha }}
